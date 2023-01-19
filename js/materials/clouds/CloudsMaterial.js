@@ -4,7 +4,6 @@ import fragmentShader from './frag.glsl'
 
 export default class Clouds extends RawShaderMaterial {
 	constructor(options) {
-		console.log(options.alphaMap)
 		super({
 			vertexShader,
 			fragmentShader,
@@ -14,8 +13,8 @@ export default class Clouds extends RawShaderMaterial {
 			side: DoubleSide,
 			uniforms: {
 				color: options.color,
-				alphaMap: { value: options.alphaMap }
-
+				alphaMap: { value: options.alphaMap },
+				uCameraRotation: { value: 0 }
 			}
 		})
 	}

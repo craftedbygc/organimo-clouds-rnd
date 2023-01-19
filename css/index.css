@@ -26,3 +26,8 @@ canvas {
   right: 0;
   bottom: 0;
 }
+
+.cloud-map{
+	transform: scale(0.2);
+	transform-origin: 0% 0%;
+}
