@@ -14,7 +14,7 @@ export default class MainScene extends Scene {
 		this.dummy = new Object3D()
 		this.count = 200
 		this.spread = 10
-		this.step = 8
+		this.step = 15
 		this.camera = new PerspectiveCamera(45, store.window.w / store.window.h, 0.1, 5000)
 		this.camera.position.z = 10
 
@@ -139,7 +139,7 @@ export default class MainScene extends Scene {
 		const particle = {}
 		particle.x = x + .15 * (Math.random() - .5)
 		particle.y = y + .15 * (Math.random() - .5)
-		particle.z = (Math.random() * 4 - 2)
+		particle.z = (Math.random() * this.step * 0.1 - this.step * 0.05)
 
 		particle.isGrowing = true
 		particle.toDelete = false
