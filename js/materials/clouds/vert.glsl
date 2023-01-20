@@ -18,13 +18,20 @@ mat4 rotationMatrix(vec3 axis, float angle)
 														oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
 														0.0,                                0.0,                                0.0,                                1.0);
 }
+mat4 translationMatrix(vec3 axis)
+{
+
+		return mat4(1., 0., 0., 0.,
+					0., 1., 0., 0.,
+					0., 0., 1., 0., 
+					axis.r , axis.g , axis.b , 1.);
+}
+
 
 void main()	{
     #include <normalsVert>
 	vUv = uv;
 	mat4 transformedMatrix = instanceMatrix;
-
-	// transformedMatrix *= rotationMatrix( vec3(0., 0., 1.), uCameraRotation * 3.14 );
 
     gl_Position = projectionMatrix * modelViewMatrix * transformedMatrix * vec4( position, 1.0 );
 }

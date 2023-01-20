@@ -16,8 +16,8 @@ export default class MainScene extends Scene {
 		this.spread = 10
 		this.step = 15
 		this.camera = new PerspectiveCamera(45, store.window.w / store.window.h, 0.1, 5000)
-		this.camera.position.z = 10
-
+		this.camera.position.z = 15
+		this.camera.position.y = 3
 		this.background = new Color(0x000000)
 		this.fog = new Fog(0x000000, this.camera.near, this.camera.far)
 
@@ -138,8 +138,8 @@ export default class MainScene extends Scene {
 	particleData(x, y) {
 		const particle = {}
 		particle.x = x + .15 * (Math.random() - .5)
-		particle.y = y + .15 * (Math.random() - .5)
-		particle.z = (Math.random() * this.step * 0.1 - this.step * 0.05)
+		particle.z = -(y + .15 * (Math.random() - .5))
+		particle.y = (Math.random() * this.step * 0.1 - this.step * 0.05)
 
 		particle.isGrowing = true
 		particle.toDelete = false
