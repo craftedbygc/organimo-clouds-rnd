@@ -7,10 +7,10 @@ export default class Clouds extends RawShaderMaterial {
 		super({
 			vertexShader,
 			fragmentShader,
-			// depthWrite: true,
-			depthTest: false,
+			depthWrite: false,
+			depthTest: true,
+			alphaTest: 0.9,
 			transparent: true,
-			side: DoubleSide,
 			uniforms: {
 				color: options.color,
 				alphaMap: { value: options.alphaMap },

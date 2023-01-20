@@ -15,7 +15,7 @@ export default class WebGL {
 	}
 
 	setup() {
-		this.renderer = new WebGLRenderer({ alpha: true, antialias: true, canvas: this.dom.canvas, powerPreference: 'high-performance', stencil: false })
+		this.renderer = new WebGLRenderer({ alpha: true, alphaTest: 0.9, antialias: true, canvas: this.dom.canvas, powerPreference: 'high-performance', stencil: false })
 		this.renderer.setPixelRatio(store.window.dpr >= 2 ? 2 : store.window.dpr)
 		this.renderer.setSize(store.window.w, store.window.h)
 

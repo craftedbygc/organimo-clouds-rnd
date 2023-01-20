@@ -1,4 +1,4 @@
-import { Color, Fog, Mesh, Object3D, PerspectiveCamera, Scene, PlaneGeometry, MeshBasicMaterial, InstancedMesh, Vector3, Euler, Quaternion, Matrix4 } from 'three'
+import { Color, Fog, Mesh, Object3D, PerspectiveCamera, MeshNormalMaterial, Scene, PlaneGeometry, MeshBasicMaterial, InstancedMesh, Vector3, Euler, Quaternion, Matrix4 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { BasicMaterial, CloudsMaterial } from '../materials'
 import store from '../store'
@@ -35,6 +35,7 @@ export default class MainScene extends Scene {
 	build() {
 		this.getCloudCoordinate()
 		this.particle = this.buildParticle()
+		this.addMountain()
 	}
 
 	getCloudCoordinate() {
@@ -151,7 +152,7 @@ export default class MainScene extends Scene {
 		particle.age = Math.PI * Math.random()
 		particle.ageDelta = .001 + .002 * Math.random()
 		particle.rotationZ = .5 * Math.random() * Math.PI
-		particle.deltaRotation = .01 * (Math.random() * 0.1 - .05)
+		particle.deltaRotation = .02 * (Math.random() * 0.1 - .05)
 
 		return particle
 	}
@@ -194,11 +195,28 @@ export default class MainScene extends Scene {
 		this.camera.updateProjectionMatrix()
 	}
 
+	addMountain() {
+		console.log(this.assets.models.rock.scene.children[0])
+		const geometry = this.assets.models.rock.scene.children[0].geometry
+		const material = new MeshNormalMaterial({
+		})
+		const mountain = new Mesh(geometry, material)
+		mountain.rotation.x = Math.PI * 0.5
+		console.log(mountain)
+		mountain.scale.set(3, 3, 3)
+		mountain.position.y = -1
+
+		this.add(mountain)
+	}
+
 	load() {
 		this.assets = {
 			textures: {
 			},
 			models: {}
+		}
+		const glb = {
+			rock: 'rock.glb'
 		}
 		const textures = {
 			smoke: 'smoke.png',
@@ -207,6 +225,11 @@ export default class MainScene extends Scene {
 		for (const key in textures) {
 			store.AssetLoader.loadTexture((`texture/${textures[key]}`)).then(texture => {
 				this.assets.textures[key] = texture
+			})
+		}
+		for (const key in glb) {
+			store.AssetLoader.loadGltf((`models/${glb[key]}`)).then((gltf, animation) => {
+				this.assets.models[key] = gltf
 			})
 		}
 	}
