@@ -1,5 +1,6 @@
-import { ClampToEdgeWrapping, Clock, LinearFilter, LinearMipmapLinearFilter, Texture, WebGLRenderer } from 'three'
+import { ClampToEdgeWrapping, Clock, Color, Fog, LinearFilter, PerspectiveCamera, LinearMipmapLinearFilter, Texture, WebGLRenderer } from 'three'
 import store from './store'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { E, qs } from './utils'
 import GlobalEvents from './utils/GlobalEvents'
 
@@ -18,6 +19,16 @@ export default class WebGL {
 		this.renderer = new WebGLRenderer({ alpha: true, alphaTest: 0.9, antialias: true, canvas: this.dom.canvas, powerPreference: 'high-performance', stencil: false })
 		this.renderer.setPixelRatio(store.window.dpr >= 2 ? 2 : store.window.dpr)
 		this.renderer.setSize(store.window.w, store.window.h)
+		this.renderer.setClearColor(0xFF0000, 0)
+		this.renderer.autoClear = false
+		store.camera = new PerspectiveCamera(45, store.window.w / store.window.h, 0.1, 5000)
+		store.camera.position.z = 15
+		store.camera.position.y = 3
+		this.background = new Color(0xFF0000)
+		this.fog = new Fog(0x000000, store.camera.near, store.camera.far)
+
+		this.controls = new OrbitControls(store.camera, this.renderer.domElement)
+		this.controls.enableDamping = true
 
 		this.clock = new Clock()
 
@@ -37,9 +48,18 @@ export default class WebGL {
 	}
 
 	onRaf = (time) => {
+		this.controls.update()
 		this.clockDelta = this.clock.getDelta()
 		this.globalUniforms.uDelta.value = this.clockDelta > 0.016 ? 0.016 : this.clockDelta
 		this.globalUniforms.uTime.value = time
+
+		// this.renderer.clear(true, false, false)
+
+		// this.renderer.render(store.MountainScene, store.camera)
+		// this.renderer.clear(true, false, false)
+		// this.renderer.render(store.CloudScene, store.camera)
+
+		// this.renderer.render(store.MountainScene, store.camera)
 	}
 
 	onResize = () => {

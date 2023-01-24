@@ -7,6 +7,7 @@ import normalsVert from '../../glsl/includes/normals/vert.glsl'
 import BasicMaterial from './basic/BasicMaterial'
 import CloudsMaterial from './clouds/CloudsMaterial'
 import TestMaterial from './test/TestMaterial'
+import EnvMapMaterial from './envMap/EnvMapMaterial'
 
 // Shader #include chunks
 ShaderChunk.defaultVert = glslifyStrip(defaultVert)
@@ -14,5 +15,5 @@ ShaderChunk.defaultFrag = glslifyStrip(defaultFrag)
 ShaderChunk.normalsVert = glslifyStrip(normalsVert)
 
 export {
-	BasicMaterial, TestMaterial, CloudsMaterial
+	BasicMaterial, TestMaterial, CloudsMaterial, EnvMapMaterial
 }
