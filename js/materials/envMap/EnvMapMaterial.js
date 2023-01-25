@@ -16,7 +16,8 @@ export default class EnvMapMaterial extends RawShaderMaterial {
 				uNightEnvMap: { value: options.uNightEnvMap },
 				cameraPosition: { value: options.cameraPosition },
 				reflectivity: { value: 0.3 },
-				specularMap: { value: options.specularMap }
+				specularMap: { value: options.specularMap },
+				hourProgress: { value: options.hourProgress }
 			}
 		})
 	}

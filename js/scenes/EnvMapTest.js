@@ -4,6 +4,7 @@ import { EnvMapMaterial } from '../materials'
 import store from '../store'
 import { E } from '../utils'
 import GlobalEvents from '../utils/GlobalEvents'
+import { Gui } from '../utils/Gui'
 // import cloudMap from '../../public/img/cloud-map.png'
 
 export default class EnvMapTest extends Scene {
@@ -15,6 +16,7 @@ export default class EnvMapTest extends Scene {
 		this.count = 200
 		this.spread = 10
 		this.step = 15
+		this.hourProgress = 1
 		this.camera = new PerspectiveCamera(45, store.window.w / store.window.h, 0.1, 5000)
 		this.camera.position.z = 15
 		this.camera.position.y = 3
@@ -23,10 +25,10 @@ export default class EnvMapTest extends Scene {
 
 		this.controls = new OrbitControls(this.camera, store.WebGL.renderer.domElement)
 		this.controls.enableDamping = true
-		console.log(store)
 		this.load()
 
 		E.on('App:start', () => {
+			store.Gui = new Gui()
 			this.build()
 			this.addEvents()
 		})
@@ -53,7 +55,8 @@ export default class EnvMapTest extends Scene {
 		}
 		this.controls.update()
 		this.mountain.material.uniforms.uTime.value = t
-
+		this.mountain.material.uniforms.hourProgress.value = store.Gui.options.dayNight
+		console.log(store.Gui.options.dayNight)
 		store.WebGL.renderer.render(this, this.camera)
 	}
 
@@ -66,11 +69,11 @@ export default class EnvMapTest extends Scene {
 			uNightEnvMap: this.nightText,
 			texture: this.assets.models.rock.scene.children[0].material.map,
 			cameraPosition: this.camera.position,
-			specularMap: this.assets.models.rock.scene.children[0].material.roughnessMap
+			specularMap: this.assets.models.rock.scene.children[0].material.roughnessMap,
+			hourProgress: this.hourProgress
 		})
 		this.mountain = new Mesh(geometry, material)
 		this.mountain.rotation.x = Math.PI * 0.5
-		console.log(this.mountain)
 		this.mountain.scale.set(3, 3, 3)
 		this.mountain.position.y = 3
 
@@ -86,7 +89,6 @@ export default class EnvMapTest extends Scene {
 		this.dayText = renderTargetDay.texture
 		store.WebGL.renderer.initTexture(this.nightText)
 		store.WebGL.renderer.initTexture(this.dayText)
-		console.log(this.nightText)
 	}
 
 	load() {

@@ -22,9 +22,17 @@ export class Gui extends Pane {
 	}
 
 	initTorus() {
-		this.options.torus = {
-			position: store.MainScene.torus.position
+		this.options = {
+			dayNight: store.EnvMapTest.hourProgress
 		}
-		this.addInput(this.options.torus, 'position')
+		// this.options.torus = {
+		// 	position: store.MainScene.torus.position
+		// }
+		// this.addInput(this.options.torus, 'position')
+
+		this.addInput(this.options, 'dayNight', {
+			min: 0,
+			max: 1
+		})
 	}
 }

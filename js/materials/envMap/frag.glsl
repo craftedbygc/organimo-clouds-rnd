@@ -10,6 +10,7 @@ uniform float uTime;
 uniform sampler2D uTexture;
 uniform sampler2D specularMap;
 uniform float reflectivity;
+uniform float hourProgress;
 
 float blendSoftLight(float base, float blend) {
 	return (blend<0.5)?(2.0*base*blend+base*base*(1.0-2.0*blend)):(sqrt(base)*(2.0*blend-1.0)+2.0*base*(1.0-blend));
@@ -38,7 +39,7 @@ void main() {
 
 	#endif
 	vec4 t = texture2D(uTexture, vUv);
-	vec4 envMapColor = mix(textureCube(uDayEnvMap, vReflect + vNormal), textureCube(uNightEnvMap, vReflect + vNormal), abs(sin(uTime)));
+	vec4 envMapColor = mix(textureCube(uDayEnvMap, vReflect + vNormal), textureCube(uNightEnvMap, vReflect + vNormal), hourProgress);
 
 	outgoingLight = t.rgb;
 	// #ifdef ENVMAP_BLENDING_MULTIPLY
@@ -56,7 +57,7 @@ void main() {
 	// #endif
 	outgoingLight += envMapColor.xyz * specularStrength * reflectivity;
 
-	vec3 softLight = blendSoftLight(t.rgb, envMapColor.rgb, .5 );	
+	vec3 softLight = blendSoftLight(t.rgb, envMapColor.rgb, 0.5 );	
     gl_FragColor = vec4(softLight, 1.);
 	// gl_FragColor = vec4(vec3(specularStrength), 1.);
 }
