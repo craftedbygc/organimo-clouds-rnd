@@ -3,6 +3,7 @@
 varying vec3 vNormal;
 varying vec2 vUv;
 varying vec3 vReflect;
+varying vec3 worldPosition;
 uniform float uTime;
 uniform bool isOrthographic;
 uniform vec3 cameraPosition;

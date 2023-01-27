@@ -3,7 +3,9 @@ import store from './store'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { E, qs } from './utils'
 import GlobalEvents from './utils/GlobalEvents'
-
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { MaskPass, ClearMaskPass } from 'three/examples/jsm/postprocessing/MaskPass.js'
 export default class WebGL {
 	constructor() {
 		this.dom = {
@@ -24,6 +26,7 @@ export default class WebGL {
 		store.camera = new PerspectiveCamera(45, store.window.w / store.window.h, 0.1, 5000)
 		store.camera.position.z = 15
 		store.camera.position.y = 3
+
 		this.background = new Color(0xFF0000)
 		this.fog = new Fog(0x000000, store.camera.near, store.camera.far)
 
@@ -36,6 +39,16 @@ export default class WebGL {
 			uDelta: { value: 0 },
 			uTime: { value: 0 }
 		}
+
+		this.composer = new EffectComposer(this.renderer)
+
+		// setTimeout(() => {
+		// 	this.CloudRender = new RenderPass(store.CloudScene, store.camera)
+		// 	this.MoutainRender = new RenderPass(store.EnvMapTest, store.camera)
+		// 	this.maskPass = new MaskPass(store.EnvMapTest, store.camera)
+		// 	this.composer.addPass(this.CloudRender)
+		// 	this.composer.addPass(this.MoutainRender)
+		// }, 5000)
 	}
 
 	start = () => {
@@ -53,13 +66,11 @@ export default class WebGL {
 		this.globalUniforms.uDelta.value = this.clockDelta > 0.016 ? 0.016 : this.clockDelta
 		this.globalUniforms.uTime.value = time
 
-		// this.renderer.clear(true, false, false)
-
-		// this.renderer.render(store.MountainScene, store.camera)
+		this.renderer.render(store.EnvMapTest, store.camera)
+		// this.renderer.render(store.EnvMapTest, store.camera)
 		// this.renderer.clear(true, false, false)
 		// this.renderer.render(store.CloudScene, store.camera)
-
-		// this.renderer.render(store.MountainScene, store.camera)
+		// this.composer.render()
 	}
 
 	onResize = () => {

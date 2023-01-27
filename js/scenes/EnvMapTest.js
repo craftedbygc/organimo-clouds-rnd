@@ -1,4 +1,4 @@
-import { Color, Fog, Mesh, Object3D, PerspectiveCamera, MeshNormalMaterial, Scene, WebGLCubeRenderTarget, PlaneGeometry, MeshBasicMaterial, InstancedMesh, Vector3, Euler, Quaternion, Matrix4, DoubleSide } from 'three'
+import { Color, Fog, Mesh, Object3D, PerspectiveCamera, TorusGeometry, MeshNormalMaterial, BoxGeometry, Scene, WebGLCubeRenderTarget, PlaneGeometry, MeshBasicMaterial, InstancedMesh, Vector3, Euler, Quaternion, Matrix4, DoubleSide } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { EnvMapMaterial } from '../materials'
 import store from '../store'
@@ -37,6 +37,7 @@ export default class EnvMapTest extends Scene {
 	build() {
 		this.setEnv()
 		this.addMountain()
+		this.addTorus()
 	}
 
 	addEvents() {
@@ -56,14 +57,17 @@ export default class EnvMapTest extends Scene {
 		this.controls.update()
 		this.mountain.material.uniforms.uTime.value = t
 		this.mountain.material.uniforms.hourProgress.value = store.Gui.options.dayNight
-		console.log(store.Gui.options.dayNight)
-		store.WebGL.renderer.render(this, this.camera)
+		this.torus.material.uniforms.uTime.value = t
+		this.torus.material.uniforms.hourProgress.value = store.Gui.options.dayNight
+		// this.mountain.material.uniforms.cameraPosition.value = this.camera.position
+		// store.WebGL.renderer.render(this, this.camera)
 	}
 
 	addMountain() {
 		this.assets.textures.rock.flipY = false
 
 		const geometry = this.assets.models.rock.scene.children[0].geometry
+		console.log(this.dayText)
 		const material = new EnvMapMaterial({
 			uDayEnvMap: this.dayText,
 			uNightEnvMap: this.nightText,
@@ -80,6 +84,28 @@ export default class EnvMapTest extends Scene {
 		this.add(this.mountain)
 	}
 
+	addTorus() {
+		this.assets.textures.rock.flipY = false
+
+		let geometry = this.assets.models.rock.scene.children[0].geometry
+		geometry = new TorusGeometry(10, 3, 16, 100)
+		console.log(this.assets.models.rock.scene.children[0])
+		const material = new EnvMapMaterial({
+			uDayEnvMap: this.dayText,
+			uNightEnvMap: this.nightText,
+			texture: this.assets.models.rock.scene.children[0].material.map,
+			cameraPosition: this.camera.position,
+			specularMap: this.assets.models.rock.scene.children[0].material.roughnessMap,
+			hourProgress: this.hourProgress
+		})
+		this.torus = new Mesh(geometry, material)
+		this.torus.rotation.x = Math.PI * 0.5
+		this.torus.scale.set(3, 3, 3)
+		this.torus.position.y = 3
+
+		this.add(this.torus)
+	}
+
 	setEnv() {
 		const renderTargetNight = new WebGLCubeRenderTarget(this.assets.textures.nightEnv.image.naturalHeight / 2)
 		const renderTargetDay = new WebGLCubeRenderTarget(this.assets.textures.dayEnv.image.naturalHeight / 2)
@@ -87,8 +113,10 @@ export default class EnvMapTest extends Scene {
 		renderTargetDay.fromEquirectangularTexture(store.WebGL.renderer, this.assets.textures.dayEnv)
 		this.nightText = renderTargetNight.texture
 		this.dayText = renderTargetDay.texture
-		store.WebGL.renderer.initTexture(this.nightText)
-		store.WebGL.renderer.initTexture(this.dayText)
+		console.log(this.nightText)
+
+		// store.WebGL.renderer.initTexture(this.nightText)
+		// store.WebGL.renderer.initTexture(this.dayText)
 	}
 
 	load() {
